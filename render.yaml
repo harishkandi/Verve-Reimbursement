@@ -1,0 +1,28 @@
+# Render blueprint for the API. Database: Neon (set DATABASE_URL in the dashboard).
+services:
+  - type: web
+    name: verve-reimbursement-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    # Free instances have no pre-deploy step, so migrations run at start.
+    startCommand: alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.10
+      - key: ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false # Neon connection string, entered at setup
+      - key: JWT_SECRET
+        generateValue: true
+      - key: APP_URL
+        value: https://verve-reimbursement.vercel.app
+      - key: CORS_ORIGINS
+        value: '["https://verve-reimbursement.vercel.app"]'
+      # Demo sign-in until SSO is chosen. Turn off before any real claims go in.
+      - key: ALLOW_DEV_LOGIN
+        value: "true"

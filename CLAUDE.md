@@ -24,9 +24,11 @@ Same stack as Verveflow (adminsoftware-alt/Verve-clickup): FastAPI + SQLAlchemy 
 - Demo data: `venv/Scripts/python seed.py` WIPES the DB and loads 9 people + 14 claims in every status (dev only; refuses otherwise). Users are `<firstname>@verve.example`: priya (employee), rohan (manager), meera (Accounts), aditi (admin). `.local`/`.test` emails fail validation. Restart uvicorn after seeding.
 - Frontend: `cd frontend && npm run dev` (proxies `/api` to :8000). Type check: `npx tsc -b`; it must be clean.
 
-## Git
-- This folder is a standalone local git repo until harishkandi gets access to `adminsoftware-alt/verve-hrms` (private). Then the code moves onto branch `feature/reimbursement` there.
-- Use GitHub account **harishkandi** for that repo, not kandiharish.
+## Git and deploy
+- Repo: github.com/harishkandi/Verve-Reimbursement (public), branch `main`; pushes auto-deploy. Later the code moves to `adminsoftware-alt/verve-hrms` on branch `feature/reimbursement`.
+- Use GitHub account **harishkandi**, not kandiharish.
+- Frontend on Vercel (root `frontend`, `VITE_API_URL` = API origin): https://verve-reimbursement.vercel.app. API on Render (`render.yaml`), database on Neon.
+- `ALLOW_DEV_LOGIN=true` on Render enables pick-a-user sign-in for the demo; demo data only until SSO.
 - Commit or push only when asked.
 
 ## Decisions (do not re-open)

@@ -19,7 +19,7 @@ def me(user: CurrentUser, db: DB):
 # which will exchange the provider's ID token for the same JWT.
 @router.post("/dev-login", response_model=AuthOut)
 def dev_login(body: DevLoginIn, db: DB):
-    if not settings.is_dev:
+    if not settings.dev_login_enabled:
         raise HTTPException(404, "Not found")
     user = db.scalar(select(User).where(func.lower(User.email) == body.email.lower()))
     if user is None or not user.is_active:
@@ -33,7 +33,7 @@ class DevUser(UserBrief):
 
 @router.get("/dev-users", response_model=list[DevUser])
 def dev_users(db: DB):
-    if not settings.is_dev:
+    if not settings.dev_login_enabled:
         raise HTTPException(404, "Not found")
     users = db.scalars(select(User).where(User.is_active).order_by(User.name)).all()
     managers = {u.manager_id for u in users if u.manager_id}

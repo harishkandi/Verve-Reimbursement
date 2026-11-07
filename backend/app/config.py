@@ -1,3 +1,4 @@
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 DEV_SECRET = "dev-only-secret-change-me-in-production-0000"
@@ -22,9 +23,26 @@ class Settings(BaseSettings):
     smtp_password: str | None = None
     mail_from: str = "reimbursements@verve.example"
 
+    # Pick-a-user sign-in outside dev, for a demo deploy before SSO exists.
+    # Anyone who can reach the API can then act as any user: demo data only.
+    allow_dev_login: bool = False
+
+    @field_validator("database_url")
+    @classmethod
+    def _psycopg_driver(cls, url: str) -> str:
+        # Neon/Render hand out postgres:// or postgresql:// URLs; SQLAlchemy needs the psycopg 3 driver named.
+        for prefix in ("postgres://", "postgresql://"):
+            if url.startswith(prefix):
+                return "postgresql+psycopg://" + url[len(prefix):]
+        return url
+
     @property
     def is_dev(self) -> bool:
         return self.env == "dev"
+
+    @property
+    def dev_login_enabled(self) -> bool:
+        return self.is_dev or self.allow_dev_login
 
 
 settings = Settings()

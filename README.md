@@ -30,7 +30,7 @@ Backend (Python 3.12):
 ```
 cd backend
 py -3.12 -m venv venv
-venv\Scripts\python -m pip install -r requirements.txt
+venv\Scripts\python -m pip install -r requirements-dev.txt
 venv\Scripts\alembic upgrade head
 venv\Scripts\python seed.py
 venv\Scripts\python -m uvicorn app.main:app --port 8000
@@ -45,6 +45,12 @@ npm run dev
 ```
 
 Open http://localhost:5173 and pick a test user. `seed.py` resets the local database and loads a demo team with three months of claims in every status. Good starting points: Priya (employee), Rohan (manager), Meera (Accounts) and Aditi (admin).
+
+## Deployment
+
+- Frontend: Vercel, root directory `frontend`, env `VITE_API_URL` = the API origin. https://verve-reimbursement.vercel.app
+- API: Render, from `render.yaml` (migrations run on start). Set `DATABASE_URL` to the Neon connection string.
+- Database: Neon Postgres.
 
 ## Tests
 
