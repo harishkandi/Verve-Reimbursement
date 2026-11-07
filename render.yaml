@@ -4,6 +4,7 @@ services:
     name: verve-reimbursement-api
     runtime: python
     plan: free
+    region: singapore # match the Neon region; cannot be changed later
     rootDir: backend
     buildCommand: pip install -r requirements.txt
     # Free instances have no pre-deploy step, so migrations run at start.
