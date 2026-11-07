@@ -1,0 +1,15 @@
+# Local Postgres matching production. SQLite is the default for day-to-day dev.
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: reimb
+      POSTGRES_PASSWORD: reimb
+      POSTGRES_DB: reimb
+    ports:
+      - "5434:5432"
+    volumes:
+      - reimb-pg:/var/lib/postgresql/data
+
+volumes:
+  reimb-pg:

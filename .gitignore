@@ -1,0 +1,27 @@
+# Python
+backend/venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+backend/*.db
+backend/uploads/
+
+# Node
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Environment (keep the examples)
+.env
+.env.*
+!.env.example
+
+# Deploy / tooling output
+.vercel/
+.playwright-mcp/
+*.log
+.DS_Store
+Thumbs.db
+
+# Source documents stay out of the code repo
+*.docx
