@@ -1,5 +1,9 @@
 const TOKEN_KEY = "reimb_token";
 
+// Empty in local dev (Vite proxies /api). In production, the backend's origin,
+// e.g. https://verve-reimbursement-api.onrender.com
+const API_BASE = (import.meta.env.VITE_API_URL ?? "").replace(/\/+$/, "");
+
 export class ApiError extends Error {
   constructor(public status: number, message: string) {
     super(message);
@@ -51,7 +55,7 @@ async function errorFrom(res: Response): Promise<ApiError> {
 
 export async function api<T>(path: string, init: RequestInit & { json?: unknown } = {}): Promise<T> {
   const { json, headers, ...rest } = init;
-  const res = await fetch(path, {
+  const res = await fetch(API_BASE + path, {
     ...rest,
     headers: {
       ...authHeaders(),
@@ -78,14 +82,14 @@ export async function upload<T>(path: string, file: File): Promise<T> {
 
 /** Fetches a protected file (bills, exports) with the auth header. */
 export async function fetchBlob(path: string): Promise<Blob> {
-  const res = await fetch(path, { headers: authHeaders() });
+  const res = await fetch(API_BASE + path, { headers: authHeaders() });
   if (!res.ok) throw await errorFrom(res);
   return res.blob();
 }
 
 /** Fetches a protected file with the auth header, then opens or saves it. */
 export async function openFile(path: string, download = false): Promise<void> {
-  const res = await fetch(path, { headers: authHeaders() });
+  const res = await fetch(API_BASE + path, { headers: authHeaders() });
   if (!res.ok) throw await errorFrom(res);
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
